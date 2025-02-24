@@ -57,13 +57,13 @@ uv venv openr1 --python 3.11 && source openr1/bin/activate && uv pip install --u
 Next, install vLLM:
 
 ```shell
-uv pip install vllm==0.7.2 --link-mode=copy
+uv pip install vllm==0.7.2 --link-mode=copy -i https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
 This will also install PyTorch `v2.5.1` and it is **very important** to use this version since the vLLM binaries are compiled for it. You can then install the remaining dependencies for your specific use case via `pip install -e .[LIST OF MODES]`. For most contributors, we recommend:
 
 ```shell
-GIT_LFS_SKIP_SMUDGE=1 uv pip install -e ".[dev]" --link-mode=copy
+GIT_LFS_SKIP_SMUDGE=1 uv pip install -e ".[dev]" --link-mode=copy -i https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
 Next, log into your Hugging Face and Weights and Biases accounts as follows:
