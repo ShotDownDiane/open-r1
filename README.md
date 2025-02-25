@@ -46,24 +46,24 @@ We will use the DeepSeek-R1 [tech report](https://github.com/deepseek-ai/DeepSee
 > [!CAUTION]
 > Libraries rely on CUDA 12.4. If you see errors related to segmentation faults, double check the version your system is running with `nvcc --version`.
 
-To run the code in this project, first, create a Python virtual environment using e.g. `uv`.
-To install `uv`, follow the [UV Installation Guide](https://docs.astral.sh/uv/getting-started/installation/).
-
+To run the code in this project, first, create a Python virtual environment.
 
 ```shell
-uv venv openr1 --python 3.11 && source openr1/bin/activate && uv pip install --upgrade pip --link-mode=copy
+conda create -n openr1 python==3.11 && source activate openr1 && pip install --upgrade pip
 ```
 
 Next, install vLLM:
 
 ```shell
-uv pip install vllm==0.7.2 --link-mode=copy -i https://pypi.tuna.tsinghua.edu.cn/simple/
+pip install vllm==0.7.2 -i https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
 This will also install PyTorch `v2.5.1` and it is **very important** to use this version since the vLLM binaries are compiled for it. You can then install the remaining dependencies for your specific use case via `pip install -e .[LIST OF MODES]`. For most contributors, we recommend:
 
 ```shell
 GIT_LFS_SKIP_SMUDGE=1 uv pip install -e ".[dev]" --link-mode=copy -i https://pypi.tuna.tsinghua.edu.cn/simple/
+or
+pip install -e ".[dev]" --no-cache-dir --use-deprecated=legacy-resolver -i https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
 Next, log into your Hugging Face and Weights and Biases accounts as follows:
@@ -88,7 +88,7 @@ sudo apt-get install git-lfs
 ## Training models
 
 We support training models with either DDP or DeepSpeed (ZeRO-2 and ZeRO-3). For example, to run SFT on a dataset distilled from DeepSeek-R1 with reasoning traces such as [open-r1/OpenR1-Math-220k](https://huggingface.co/datasets/open-r1/OpenR1-Math-220k), run:
-
+PS: max_seq_length=4096, per_device_train_batch_size=2 可以在48G显存下训练，A800训练时间为12个小时 
 ```shell
 # Train via command line
 accelerate launch --config_file=recipes/accelerate_configs/zero3.yaml src/open_r1/sft.py \
@@ -97,7 +97,7 @@ accelerate launch --config_file=recipes/accelerate_configs/zero3.yaml src/open_r
     --learning_rate 1.0e-5 \
     --num_train_epochs 1 \
     --packing \
-    --max_seq_length 16384 \
+    --max_seq_length 4096 \
     --per_device_train_batch_size 16 \
     --gradient_checkpointing \
     --bf16 \
