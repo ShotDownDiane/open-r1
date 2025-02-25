@@ -107,7 +107,10 @@ accelerate launch --config_file=recipes/accelerate_configs/zero3.yaml src/open_r
 accelerate launch --config_file recipes/accelerate_configs/zero3.yaml src/open_r1/sft.py \
     --config recipes/Qwen2.5-1.5B-Instruct/sft/config_demo.yaml
 ```
-
+PS: 我遇到了NoneType 问题，通过修改trl版本可解决
+```
+pip install trl==0.15.0
+```
 Currently, the following tasks are supported:
 
 * Supervised Fine-Tuning `sft`
