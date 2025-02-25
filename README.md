@@ -279,6 +279,7 @@ lighteval vllm $MODEL_ARGS "custom|$TASK|0|0" \
     --output-dir $OUTPUT_DIR
 
 # MATH-500
+MODEL_ARGS="pretrained=$MODEL,dtype=bfloat16,max_model_length=32768,generation_parameters={max_new_tokens:32768}"
 TASK=math_500
 lighteval vllm $MODEL_ARGS "custom|$TASK|0|0" \
     --custom-tasks src/open_r1/evaluate.py \
